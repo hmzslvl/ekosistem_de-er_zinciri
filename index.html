@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Savunma Sanayii — Değer Zinciri Ekosistem Haritası</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        :root {
+            --primary: #1a3a5c;
+            --primary-light: #2c5f8a;
+            --secondary: #0d7377;
+            --accent: #c8a84e;
+            --accent-light: #e8d48b;
+            --bg: #f0f2f5;
+            --card-bg: #ffffff;
+            --text: #2c3e50;
+            --text-light: #7f8c8d;
+            --border: #dce1e8;
+            --shadow: 0 4px 24px rgba(26,58,92,0.10);
+            --shadow-hover: 0 8px 32px rgba(26,58,92,0.18);
+            --tier-oem: #1a3a5c;
+            --tier-1: #1b6b70;
+            --tier-2: #2980b9;
+            --tier-sub: #6c5ce7;
+            --tier-log: #e17055;
+            --tier-dist: #00b894;
+            --tier-person: #fdcb6e;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        /* ===== HEADER ===== */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 50%, var(--secondary) 100%);
+            padding: 40px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at 30% 50%, rgba(200,168,78,0.08) 0%, transparent 60%);
+        }
+        .header h1 {
+            color: #fff;
+            font-size: 2.2em;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            position: relative;
+        }
+        .header .subtitle {
+            color: var(--accent-light);
+            font-size: 1.05em;
+            font-weight: 400;
+            margin-top: 8px;
+            position: relative;
+        }
+        .header .badge {
+            display: inline-block;
+            background: rgba(200,168,78,0.2);
+            border: 1px solid var(--accent);
+            color: var(--accent-light);
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 500;
+            margin-top: 14px;
+            position: relative;
+        }
+        
+        .container { max-width: 1280px; margin: 0 auto; padding: 30px 20px; }
+        
+        /* ===== SECTION HEADERS ===== */
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--accent);
+        }
+        .section-title .icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            color: #fff;
+            flex-shrink: 0;
+        }
+        .section-title h2 {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .section-title p {
+            font-size: 0.9em;
+            color: var(--text-light);
+            margin-top: 2px;
+        }
+
+        /* ===== VALUE CHAIN VERTICAL ===== */
+        .chain-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            position: relative;
+            padding-left: 60px;
+        }
+        
+        .chain-connector {
+            position: absolute;
+            left: 79px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--tier-oem), var(--tier-1), var(--tier-2), var(--tier-sub), var(--tier-log), var(--tier-dist), var(--tier-person));
+            border-radius: 3px;
+        }
+        
+        .chain-node {
+            display: flex;
+            gap: 20px;
+            align-items: stretch;
+            position: relative;
+            padding: 12px 0;
+        }
+        
+        .node-indicator {
+            width: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+        }
+        .node-dot {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            box-shadow: 0 0 0 3px currentColor, var(--shadow);
+            z-index: 2;
+        }
+        
+        .node-card {
+            flex: 1;
+            background: var(--card-bg);
+            border-radius: 14px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border-left: 5px solid transparent;
+        }
+        .node-card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateX(6px);
+        }
+        
+        .node-header {
+            padding: 18px 24px;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .node-header h3 {
+            font-size: 1.1em;
+            font-weight: 700;
+        }
+        .node-header .layer-tag {
+            background: rgba(255,255,255,0.2);
+            padding: 3px 12px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 500;
+        }
+        
+        .node-body {
+            padding: 20px 24px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+        }
+        
+        .node-section h4 {
+            font-size: 0.75em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+        .node-section ul {
+            list-style: none;
+            padding: 0;
+        }
+        .node-section ul li {
+            font-size: 0.88em;
+            padding: 4px 0;
+            padding-left: 16px;
+            position: relative;
+            color: var(--text);
+        }
+        .node-section ul li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 11px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+        
+        /* ===== FLOW ARROWS ===== */
+        .flow-arrow {
+            text-align: center;
+            padding: 4px 0;
+            position: relative;
+            z-index: 1;
+        }
+        .flow-arrow span {
+            display: inline-block;
+            color: var(--text-light);
+            font-size: 0.8em;
+            font-weight: 500;
+            background: var(--bg);
+            padding: 2px 14px;
+            border-radius: 10px;
+            border: 1px dashed var(--border);
+        }
+        
+        /* ===== OPPORTUNITY PANEL ===== */
+        .opp-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 10px;
+        }
+        .opp-card {
+            background: var(--card-bg);
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border-top: 4px solid var(--accent);
+            transition: all 0.3s ease;
+        }
+        .opp-card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-4px);
+        }
+        .opp-card h4 {
+            font-size: 1em;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 6px;
+        }
+        .opp-card .opp-desc {
+            font-size: 0.88em;
+            color: var(--text-light);
+            margin-bottom: 14px;
+        }
+        .opp-card .opp-metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: #f8f9fb;
+            border-radius: 8px;
+            margin-top: 6px;
+        }
+        .opp-card .opp-metric .label {
+            font-size: 0.82em;
+            color: var(--text-light);
+        }
+        .opp-card .opp-metric .value {
+            font-size: 0.88em;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        /* ===== LENS EVALUATION ===== */
+        .lens-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 10px;
+        }
+        .lens-card {
+            background: var(--card-bg);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+        .lens-card:hover { box-shadow: var(--shadow-hover); }
+        .lens-header {
+            padding: 18px 22px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .lens-header .lens-icon { font-size: 1.4em; }
+        .lens-header h4 { font-size: 1em; font-weight: 700; }
+        .lens-body { padding: 20px 22px; }
+        .lens-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .lens-item:last-child { border-bottom: none; }
+        .lens-item .question { font-size: 0.88em; color: var(--text); flex: 1; }
+        .lens-status {
+            padding: 3px 14px;
+            border-radius: 12px;
+            font-size: 0.78em;
+            font-weight: 600;
+            flex-shrink: 0;
+            margin-left: 12px;
+        }
+        .status-green { background: #e6f9f0; color: #1a9a5c; }
+        .status-yellow { background: #fff8e6; color: #b8860b; }
+        .status-red { background: #fde8e8; color: #c0392b; }
+        
+        .lens-verdict {
+            margin-top: 14px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        /* ===== MATURITY SECTION ===== */
+        .maturity-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-top: 10px;
+        }
+        .maturity-card {
+            background: var(--card-bg);
+            border-radius: 14px;
+            padding: 22px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+        .maturity-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-3px); }
+        .maturity-card .m-icon { font-size: 2em; margin-bottom: 10px; }
+        .maturity-card h4 { font-size: 0.92em; font-weight: 700; color: var(--primary); margin-bottom: 6px; }
+        .maturity-card p { font-size: 0.82em; color: var(--text-light); margin-bottom: 12px; }
+        .maturity-bar {
+            height: 8px;
+            background: #eee;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .maturity-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+        
+        /* ===== CONCLUSION BOX ===== */
+        .conclusion {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 16px;
+            padding: 36px;
+            margin-top: 40px;
+            color: #fff;
+            text-align: center;
+        }
+        .conclusion h3 {
+            font-size: 1.3em;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        .conclusion p {
+            font-size: 1em;
+            font-weight: 300;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.92;
+        }
+        .conclusion .cat-badge {
+            display: inline-block;
+            margin-top: 18px;
+            background: rgba(200,168,78,0.25);
+            border: 2px solid var(--accent);
+            color: var(--accent-light);
+            padding: 8px 28px;
+            border-radius: 24px;
+            font-size: 1.05em;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-light);
+            font-size: 0.82em;
+        }
+        
+        @media (max-width: 900px) {
+            .node-body { grid-template-columns: 1fr; }
+            .maturity-grid { grid-template-columns: repeat(2, 1fr); }
+            .chain-wrapper { padding-left: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="header">
+    <h1>Savunma Sanayii — Değer Zinciri Ekosistem Haritası</h1>
+    <div class="subtitle">Kuveyt Türk Ekosistem Bankacılığı Stratejik Dönüşüm Programı</div>
+    <div class="badge">Stratejik Program Yönetim Ofisi — 2026</div>
+</div>
+
+<div class="container">
+
+<!-- ===== SECTION 1: VALUE CHAIN ===== -->
+<div style="margin-bottom: 50px;">
+    <div class="section-title">
+        <div class="icon" style="background: var(--primary);">🔗</div>
+        <div>
+            <h2>Değer Zinciri Katmanları</h2>
+            <p>Savunma sanayii ekosistemindeki aktörler, finansal ihtiyaçlar ve KT ürün fırsatları</p>
+        </div>
+    </div>
+    
+    <div class="chain-wrapper">
+        <div class="chain-connector"></div>
+        
+        <!-- OEM -->
+        <div class="chain-node">
+            <div class="node-indicator">
+                <div class="node-dot" style="color: var(--tier-oem); background: var(--tier-oem);"></div>
+            </div>
+            <div class="node-card" style="border-left-color: var(--tier-oem);">
+                <div class="node-header" style="background: var(--tier-oem);">
+                    <h3>🏭 Ana Üretici (OEM) — Çapa Müşteri</h3>
+                    <span class="layer-tag">Katman 0</span>
+                </div>
+                <div class="node-body">
+                    <div class="node-section">
+                        <h4>Tipik Aktörler</h4>
+                        <ul>
+                            <li>ASELSAN</li>
+                            <li>TAI (TUSAŞ)</li>
+                            <li>ROKETSAN</li>
+                            <li>HAVELSAN</li>
+                            <li>BMC</li>
+                            <li>FNSS</li>
+                            <li>STM</li>
+                        </ul>
+                    </div>
+                    <div class="node-section">
+                        <h4>Finansal İhtiyaçlar</h4>
+                        <ul>
+                            <li>Proje bazlı finansman</li>
+                            <li>Teminat mektubu</li>
+                            <li>Döviz yönetimi / hedging</li>
+                            <li>Nakdi ve gayrinakdi kredi</li>
+                            <li>Yatırım finansmanı</li>
+                            <li>İhracat kredi sigortası</li>
+                        </ul>
+                    </div>
+                    <div class="node-section">
+                        <h4>KT Ürün Fırsatları</h4>
+                        <ul>
+                            <li>Kurumsal finansman paketleri</li>
+                            <li>KTFG Leasing (üretim ekipmanı)</li>
+                            <li>KTFG Sigorta (proje sigortası)</li>
+                            <li>Hazine ürünleri</li>
+                            <li>Nakit yönetimi çözümleri</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="flow-arrow"><span>▼ Tedarik siparişleri, sözleşmeler, ödeme akışları</span></div>
+        
+        <!-- TIER 1 -->
+        <div class="chain-node">
+            <div class="node-indicator">
+                <div class="node-dot" style="color: var(--tier-1); background: var(--tier-1);"></div>
+            </div>
+            <div class="node-card" style="border-left-color: var(--tier-1);">
+                <div class="node-header" style="background: var(--tier-1);">
+                    <h3>🔧 Tier-1 Tedarikçiler (Alt Sistem)</h3>
+                    <span class="layer-tag">Katman 1</span>
+                </div>
+                <div class="node-body">
+                    <div class="node-section">
+                        <h4>Tipik Aktörler</h4>
+                        <ul>
+                            <li>Radar / sensör üreticileri</li>
+                            <li>Aviyonik sistem firmaları</li>
+                            <li>Elektronik harp sistemleri</li>
+                            <li>Motor / güç sistemleri</li>
+                            <li>Yazılım ve gömülü sistem firmaları</li>
+                        </ul>
+                    </div>
+                    <div class="node-section">
+                        <h4>Finansal İhtiyaçlar</h4>
+                        <ul>
+                            <li>İşletme sermayesi finansmanı</li>
+                            <li>Tedarikçi finansmanı (SCF)</li>
+                            <li>Akreditif / vesaik</li>
+                            <li>Ar-Ge yatırım kredisi</li>
+                            <li>Teminat mektubu</li>
+                        </ul>
+                    </div>
+                    <div class="node-section">
+                        <h4>KT Ürün Fırsatları</h4>
+                        <ul>
+                            <li>Tedarik zinciri finansmanı</li>
+                            <li>KTFG Faktoring</li>
+                            <li>Yatırım kredisi (Ar-Ge)</li>
+                            <li>Dış ticaret finansmanı</li>
+                            <li>Teminat mektubu</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="flow-arrow"><span>▼ Komponent siparişleri, teknik şartnameler</span></div>
+        
+        <!-- TIER 2 -->
+        <div class="chain-node">
+            <div class="node-indicator">
+                <div class="node-dot" style="color: var(--tier-2); background: var(--tier-2);"></div>
+            </div>
+            <div class="node-card" style="border-left-color: var(--tier-2);">
+                <div class="node-header" style="background: var(--tier-2);">
+                    <h3>⚙️ Tier-2 Tedarikçiler (Komponent)</h3>
+                    <span class="layer-tag">Katman 2</span>
+                </div>
+                <div class="node-body">
+                    <div class="node-section">
+                        <h4>Tipik Aktörler</h4>
+                        <ul>
+                            <li>Mekanik parça üreticileri</li>
+                            <li>Elektronik kart / PCB üreticileri</li>
+                            <li>Hassas işleme (CNC) firmaları</li>
+                            <li>Kablo / konnektör üreticileri</li>
+                            <li>Hammadde tedarikçileri</li>
+                        </ul>
+                    </div>
+                    <div class="node-section">
+                        <h4>Finansal İhtiyaçlar</h4>
+                        <ul>
+                            <li>İşletme sermayesi (kısa vade)</li>
+                            <li>Makine / ekipman finansmanı</li>
+                            <li>Çek / senet iskontosu</li>
+                            <li>KOBİ kredisi</li>
+                            <li>Ticari kredi kartı</li>
+                        </ul>
+                    </div>
+                    <div class="node-section">
+                        <h4>KT Ürün Fırsatları</h4>
+                        <ul>
+                            <li>KOBİ bankacılığı paketleri</li>
+                            <li>KTFG Leasing (makine)</li>
+                            <li>Çek / senet iskontosu</li>
+                            <li>POS ve tahsilat çözümleri</li>
+                            <li>Dijital bankacılık</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="flow-arrow"><span>▼ Hizmet sözleşmeleri, proje bazlı iş emirleri</span></div>
+        
+        <!-- ALT YÜKLENİCİLER -->
+        <div class="chain-node">
+            <div class="node-indicator">
+                <div class="node-dot" style="color: var(--tier-sub); background: var(--tier-sub);"></div>
+            </div>
+            <div class="node-card" style="border-left-color: var(--tier-sub);">
+                <div class="node-header" style="background: var(--tier-sub);">
+                    <h3>🏗️ Alt Yükleniciler</h3>
+                    <span class="layer-tag">Katman 3</span>
+                </div>
+                <div class="node-body">
+                    <div class="node-section">
+                        <h4>Tipik Aktörler</h4>
+                        <ul>
+                            <li>Test ve kalibrasyon firmaları</li>
+                            <li>Özel mühendislik hizmetleri</li>
+                            <li>Yüzey kaplama / ısıl işlem</li>
+                            <li>Prototip üretim atölyeleri</li>
+                            <li>Sertifikasyon danışmanları</li>
+                        </ul>
+                    </div>
+                    <div class="node-section">
+                        <h4>Finansal İhtiyaçlar</h4>
+                        <ul>
+                            <li>Proje avans finansmanı</li>
+                            <li>Kısa vadeli işletme sermayesi</li>
+                            <li>Ekipman yenileme</li>
+                            <li>Hakediş finansmanı</li>
+                        </ul>
+                    </div>
+                    <div class="node-section">
+                        <h4>KT Ürün Fırsatları</h4>
+                        <ul>
+                            <li>Mikro KOBİ finansmanı</li>
+                            <li>KTFG Faktoring (hakediş)</li>
+                            <li>İşletme kredisi</li>
+                            <li>Ticari kredi kartı</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="flow-arrow"><span>▼ Lojistik, depolama, sevkiyat akışları</span></div>
+        
+        <!-- LOJİSTİK -->
+        <div class="chain-node">
+            <div class="node-indicator">
+                <div class="node-dot" style="color: var(--tier-log); background: var(--tier-log);"></div>
+            </div>
+            <div class="node-card" style="border-left-color: var(--tier-log);">
+                <div class="node-header" style="background: var(--tier-log);">
+                    <h3>🚛 Lojistik ve Destek Hizmetleri</h3>
+                    <span class="layer-tag">Destek Katmanı</span>
+                </div>
+                <div class="node-body">
+                    <div class="node-section">
+                        <h4>Tipik Aktörler</h4>
+                        <ul>
+                            <li>Savunma lojistik firmaları</li>
+                            <li>Gümrükleme şirketleri</li>
+                            <li>Depolama ve ambalaj</li>
+                            <li>Bakım-onarım (MRO) firmaları</li>
+                            <li>Sigorta ve gözetim şirketleri</li>
+                        </ul>
+                    </div>
+                    <div class="node-section">
+                        <h4>Finansal İhtiyaçlar</h4>
+                        <ul>
+                            <li>Filo / araç finansmanı</li>
+                            <li>Nakliye sigortası</li>
+                            <li>Gümrük teminat mektubu</li>
+                            <li>İşletme sermayesi</li>
+                        </ul>
+                    </div>
+                    <div class="node-section">
+                        <h4>KT Ürün Fırsatları</h4>
+                        <ul>
+                            <li>KTFG Leasing (filo)</li>
+                            <li>KTFG Sigorta (nakliye)</li>
+                            <li>Teminat mektubu</li>
+                            <li>Dış ticaret ürünleri</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="flow-arrow"><span>▼ İhracat, offset anlaşmaları, distribüsyon</span></div>
+        
+        <!-- İHRACAT -->
+        <div class="chain-node">
+            <div class="node-indicator">
+                <div class="node-dot" style="color: var(--tier-dist); background: var(--tier-dist);"></div>
+            </div>
+            <div class="node-card" style="border-left-color: var(--tier-dist);">
+                <div class="node-header" style="background: var(--tier-dist);">
+                    <h3>🌍 İhracat ve Offset Ortakları</h3>
+                    <span class="layer-tag">Dış Katman</span>
+                </div>
+                <div class="node-body">
+                    <div class="node-section">
+                        <h4>Tipik Aktörler</h4>
+                        <ul>
+                            <li>İhracat aracı firmaları</li>
+                            <li>Offset yükümlülük ortakları</li>
+                            <li>Uluslararası iş geliştirme danışmanları</li>
+                            <li>Hedef ülke yerel temsilcileri</li>
+                        </ul>
+                    </div>
+                    <div class="node-section">
+                        <h4>Finansal İhtiyaçlar</h4>
+                        <ul>
+                            <li>İhracat finansmanı</li>
+                            <li>Akreditif (L/C)</li>
+                            <li>İhracat alacak sigortası</li>
+                            <li>Döviz hesap yönetimi</li>
+                        </ul>
+                    </div>
+                    <div class="node-section">
+                        <h4>KT Ürün Fırsatları</h4>
+                        <ul>
+                            <li>Dış ticaret finansmanı</li>
+                            <li>Akreditif / vesaik</li>
+                            <li>KTFG Sigorta (ihracat)</li>
+                            <li>Hazine / döviz ürünleri</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="flow-arrow"><span>▼ Bordro, bireysel finansman, sigorta, yatırım</span></div>
+        
+        <!-- GERÇEK KİŞİLER -->
+        <div class="chain-node">
+            <div class="node-indicator">
+                <div class="node-dot" style="color: var(--tier-person); background: var(--tier-person);"></div>
+            </div>
+            <div class="node-card" style="border-left-color: var(--tier-person);">
+                <div class="node-header" style="background: linear-gradient(135deg, #b8860b, #d4a832);">
+                    <h3>👤 Gerçek Kişi Temasları</h3>
+                    <span class="layer-tag">Bireysel Katman</span>
+                </div>
+                <div class="node-body">
+                    <div class="node-section">
+                        <h4>Tipik Profiller</h4>
+                        <ul>
+                            <li>Mühendisler ve teknik personel</li>
+                            <li>Yönetici kadro</li>
+                            <li>Üretim çalışanları</li>
+                            <li>Ar-Ge personeli</li>
+                            <li>Firma ortakları / sahipleri</li>
+                        </ul>
+                    </div>
+                    <div class="node-section">
+                        <h4>Finansal İhtiyaçlar</h4>
+                        <ul>
+                            <li>Maaş hesabı</li>
+                            <li>Bireysel finansman (konut, taşıt)</li>
+                            <li>Bireysel emeklilik</li>
+                            <li>Kredi kartı</li>
+                            <li>Yatırım ürünleri</li>
+                        </ul>
+                    </div>
+                    <div class="node-section">
+                        <h4>KT Ürün Fırsatları</h4>
+                        <ul>
+                            <li>Bordro bankacılığı</li>
+                            <li>Katılım hesapları</li>
+                            <li>KTFG BES</li>
+                            <li>KTFG Sigorta (bireysel)</li>
+                            <li>Altın / sukuk yatırım</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<!-- ===== SECTION 2: OPPORTUNITIES ===== -->
+<div style="margin-bottom: 50px;">
+    <div class="section-title">
+        <div class="icon" style="background: var(--secondary);">💡</div>
+        <div>
+            <h2>Ekosistem Bankacılığı Fırsat Alanları</h2>
+            <p>Değer zinciri üzerindeki temel penetrasyon ve gelir artış fırsatları</p>
+        </div>
+    </div>
+    
+    <div class="opp-grid">
+        <div class="opp-card">
+            <h4>Tedarik Zinciri Finansmanı (SCF)</h4>
+            <div class="opp-desc">Çapa müşterinin onayıyla tedarikçilere erken ödeme imkânı sunarak zincirin tamamını KT'ye bağlama</div>
+            <div class="opp-metric">
+                <span class="label">Hedef Katman</span>
+                <span class="value">Tier-1, Tier-2</span>
+            </div>
+            <div class="opp-metric">
+                <span class="label">KTFG Sinerjisi</span>
+                <span class="value">Faktoring, Leasing</span>
+            </div>
+        </div>
+        
+        <div class="opp-card">
+            <h4>Çapa Müşteri Referans Programı</h4>
+            <div class="opp-desc">OEM'lerin tedarikçi / alt yüklenici ağını KT'ye yönlendirmesi için yapılandırılmış referans mekanizması</div>
+            <div class="opp-metric">
+                <span class="label">Edinim Yöntemi</span>
+                <span class="value">Çapa müşteri referansı</span>
+            </div>
+            <div class="opp-metric">
+                <span class="label">Beklenen Etki</span>
+                <span class="value">Yüksek dönüşüm oranı</span>
+            </div>
+        </div>
+        
+        <div class="opp-card">
+            <h4>Bordro Bankacılığı Geçişi</h4>
+            <div class="opp-desc">Tüzel ekosistem ilişkisi üzerinden çalışan maaş hesaplarını ve bireysel ürün çapraz satışını devreye alma</div>
+            <div class="opp-metric">
+                <span class="label">Hedef Katman</span>
+                <span class="value">Gerçek Kişi Temasları</span>
+            </div>
+            <div class="opp-metric">
+                <span class="label">Ürün Derinliği</span>
+                <span class="value">Maaş + BES + Sigorta + Kredi</span>
+            </div>
+        </div>
+        
+        <div class="opp-card">
+            <h4>Veri Odaklı Ekosistem Keşfi</h4>
+            <div class="opp-desc">Çek, EFT, e-fatura verileri üzerinden çapa müşterinin bilinmeyen tedarikçi / bayi ağını tespit etme</div>
+            <div class="opp-metric">
+                <span class="label">Veri Kaynakları</span>
+                <span class="value">Çek, EFT, e-Fatura</span>
+            </div>
+            <div class="opp-metric">
+                <span class="label">Çıktı</span>
+                <span class="value">Potansiyel müşteri havuzu</span>
+            </div>
+        </div>
+        
+        <div class="opp-card">
+            <h4>KTFG Entegre Çözüm Paketi</h4>
+            <div class="opp-desc">Leasing + Faktoring + Sigorta + Portföy yönetimini tek bir ekosistem paketi altında sunma</div>
+            <div class="opp-metric">
+                <span class="label">Kapsam</span>
+                <span class="value">Tüm katmanlar</span>
+            </div>
+            <div class="opp-metric">
+                <span class="label">Farklılaşma</span>
+                <span class="value">Grup sinerjisi avantajı</span>
+            </div>
+        </div>
+        
+        <div class="opp-card">
+            <h4>İhracat Finansman Desteği</h4>
+            <div class="opp-desc">Savunma sanayii ihracat hacminin artmasıyla birlikte dış ticaret finansmanı ve akreditif fırsatları</div>
+            <div class="opp-metric">
+                <span class="label">Hedef Katman</span>
+                <span class="value">OEM + İhracat Ortakları</span>
+            </div>
+            <div class="opp-metric">
+                <span class="label">Trend</span>
+                <span class="value">Yükselen ihracat hacmi</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== SECTION 3: 3 LENS EVALUATION ===== -->
+<div style="margin-bottom: 50px;">
+    <div class="section-title">
+        <div class="icon" style="background: var(--accent); color: var(--primary);">🔍</div>
+        <div>
+            <h2>Sektör Değerlendirmesi — 3 Lens Modeli</h2>
+            <p>Savunma sanayii sektörünün stratejik kategoriye yerleştirilmesi</p>
+        </div>
+    </div>
+    
+    <div class="lens-grid">
+        <!-- Lens 1 -->
+        <div class="lens-card">
+            <div class="lens-header" style="background: var(--primary);">
+                <span class="lens-icon">🏦</span>
+                <h4>Kurumsal Yetkinlik</h4>
+            </div>
+            <div class="lens-body">
+                <div class="lens-item">
+                    <span class="question">Sektörde anlamlı portföy büyüklüğü</span>
+                    <span class="lens-status status-yellow">Orta</span>
+                </div>
+                <div class="lens-item">
+                    <span class="question">Kilit oyuncularla ilişki derinliği</span>
+                    <span class="lens-status status-yellow">Geliştirilmeli</span>
+                </div>
+                <div class="lens-item">
+                    <span class="question">Sektöre özel ürün / hizmet kapasitesi</span>
+                    <span class="lens-status status-green">Uygun</span>
+                </div>
+                <div class="lens-item">
+                    <span class="question">Saha ekibi sektörel yetkinliği</span>
+                    <span class="lens-status status-yellow">Orta</span>
+                </div>
+                <div class="lens-item">
+                    <span class="question">Katılım bankacılığı uyumu</span>
+                    <span class="lens-status status-green">Yüksek</span>
+                </div>
+                <div class="lens-verdict" style="background: #fff8e6; color: #b8860b;">
+                    Genel Değerlendirme: 🟡 Orta — Güçlendirme Potansiyeli Yüksek
+                </div>
+            </div>
+        </div>
+        
+        <!-- Lens 2 -->
+        <div class="lens-card">
+            <div class="lens-header" style="background: var(--secondary);">
+                <span class="lens-icon">🌍</span>
+                <h4>Pazar Çekiciliği</h4>
+            </div>
+            <div class="lens-body">
+                <div class="lens-item">
+                    <span class="question">Sektör büyüme trendi ve GSYH ağırlığı</span>
+                    <span class="lens-status status-green">Yüksek</span>
+                </div>
+                <div class="lens-item">
+                    <span class="question">Değer zinciri derinliği ve katman sayısı</span>
+                    <span class="lens-status status-green">Derin</span>
+                </div>
+                <div class="lens-item">
+                    <span class="question">Konjonktürel dinamikler ve kamu desteği</span>
+                    <span class="lens-status status-green">Çok Güçlü</span>
+                </div>
+                <div class="lens-item">
+                    <span class="question">Rekabet penceresi (rakip banka ekosistem çalışması)</span>
+                    <span class="lens-status status-green">Açık</span>
+                </div>
+                <div class="lens-item">
+                    <span class="question">Finansman ihtiyaç çeşitliliği</span>
+                    <span class="lens-status status-green">Yüksek</span>
+                </div>
+                <div class="lens-verdict" style="background: #e6f9f0; color: #1a9a5c;">
+                    Genel Değerlendirme: 🟢 Yüksek — Güçlü Fırsat Penceresi
+                </div>
+            </div>
+        </div>
+        
+        <!-- Lens 3 -->
+        <div class="lens-card">
+            <div class="lens-header" style="background: #e17055;">
+                <span class="lens-icon">⚡</span>
+                <h4>Operasyonel Hazırlık</h4>
+            </div>
+            <div class="lens-body">
+                <div class="lens-item">
+                    <span class="question">Ekosistem haritalaması için veri erişimi</span>
+                    <span class="lens-status status-yellow">Kısmen</span>
+                </div>
+                <div class="lens-item">
+                    <span class="question">Saha ekiplerinin hızlı odaklanma kapasitesi</span>
+                    <span class="lens-status status-yellow">Kısmen</span>
+                </div>
+                <div class="lens-item">
+                    <span class="question">3-6 ayda pilot başlatma imkânı</span>
+                    <span class="lens-status status-green">Evet</span>
+                </div>
+                <div class="lens-item">
+                    <span class="question">Belirgin çapa müşteri adayları</span>
+                    <span class="lens-status status-green">Mevcut</span>
+                </div>
+                <div class="lens-item">
+                    <span class="question">Sektör masası için iç uzmanlık</span>
+                    <span class="lens-status status-yellow">Geliştirilmeli</span>
+                </div>
+                <div class="lens-verdict" style="background: #fff8e6; color: #b8860b;">
+                    Genel Değerlendirme: 🟡 Kısmen — Aşılabilir Engeller
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== SECTION 4: ECOSYSTEM MATURITY ===== -->
+<div style="margin-bottom: 30px;">
+    <div class="section-title">
+        <div class="icon" style="background: #6c5ce7;">📊</div>
+        <div>
+            <h2>Ekosistem Olgunluk Doğrulaması</h2>
+            <p>Savunma sanayii için ekosistem bankacılığı hazırlık düzeyi</p>
+        </div>
+    </div>
+    
+    <div class="maturity-grid">
+        <div class="maturity-card">
+            <div class="m-icon">📡</div>
+            <h4>Veri Görünürlüğü</h4>
+            <p>Değer zincirini mevcut veri kaynaklarıyla haritalayabilme kapasitesi</p>
+            <div class="maturity-bar">
+                <div class="maturity-fill" style="width: 60%; background: linear-gradient(90deg, var(--accent), #e8d48b);"></div>
+            </div>
+            <div style="margin-top:8px; font-size:0.82em; color:var(--text-light);">Çek ve EFT verileri mevcut; e-fatura entegrasyonu geliştirilmeli</div>
+        </div>
+        <div class="maturity-card">
+            <div class="m-icon">🎯</div>
+            <h4>Çapa Müşteri Varlığı</h4>
+            <p>Etrafında ekosistem kurulabilecek somut müşteri adayları</p>
+            <div class="maturity-bar">
+                <div class="maturity-fill" style="width: 75%; background: linear-gradient(90deg, var(--secondary), #2ed8a3);"></div>
+            </div>
+            <div style="margin-top:8px; font-size:0.82em; color:var(--text-light);">Portföyde savunma sektörü müşterileri mevcut; derinleştirme gerekli</div>
+        </div>
+        <div class="maturity-card">
+            <div class="m-icon">📦</div>
+            <h4>Ürün Hazırlığı</h4>
+            <p>Ekosistem oyuncularına sunulabilecek ürün seti yeterliliği</p>
+            <div class="maturity-bar">
+                <div class="maturity-fill" style="width: 70%; background: linear-gradient(90deg, var(--primary), var(--primary-light));"></div>
+            </div>
+            <div style="margin-top:8px; font-size:0.82em; color:var(--text-light);">Temel ürünler mevcut; SCF ve ekosistem paketleri tasarlanmalı</div>
+        </div>
+        <div class="maturity-card">
+            <div class="m-icon">🤝</div>
+            <h4>Erişim Kapasitesi</h4>
+            <p>Çapa müşteri üzerinden değer zincirine ulaşabilme gücü</p>
+            <div class="maturity-bar">
+                <div class="maturity-fill" style="width: 55%; background: linear-gradient(90deg, #e17055, #fab1a0);"></div>
+            </div>
+            <div style="margin-top:8px; font-size:0.82em; color:var(--text-light);">İlişki ağı var ancak referans mekanizması henüz yapılandırılmamış</div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== CONCLUSION ===== -->
+<div class="conclusion">
+    <h3>Stratejik Kategori Değerlendirmesi</h3>
+    <p>Savunma sanayii, güçlü pazar çekiciliği ve belirgin çapa müşteri varlığıyla <strong>Odak</strong> kategorisine yerleştirilmeye uygundur. Kurumsal yetkinlik ve operasyonel hazırlık alanlarındaki kısmi eksiklikler, programın ilk fazında giderilebilir niteliktedir.</p>
+    <div class="cat-badge">🟢 ÖNERİLEN KATEGORİ: ODAK</div>
+</div>
+
+</div>
+
+<div class="footer">
+    Kuveyt Türk Katılım Bankası — Stratejik Program Yönetim Ofisi — Ekosistem Bankacılığı Stratejik Dönüşüm Programı — 2026
+</div>
+
+</body>
+</html>
